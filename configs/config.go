@@ -20,14 +20,14 @@ type Config struct {
 
 func LoadConfig() (*Config, error) {
 	envPaths := []string{".env", "../.env", "../../.env"}
-	var loadErr error
+	var errLoad error
 	for _, path := range envPaths {
 		if err := godotenv.Load(path); err == nil {
 			// Successfully loaded
-			loadErr = nil
+			errLoad = nil
 			break
 		} else {
-			loadErr = err
+			errLoad = err
 		}
 	}
 
@@ -41,5 +41,5 @@ func LoadConfig() (*Config, error) {
 		SecretKey:     os.Getenv("SECRET_KEY"),
 		TokenIssuer:   os.Getenv("TOKEN_ISSUER"),
 		TokenAudience: os.Getenv("TOKEN_AUDIENCE"),
-	}, loadErr
+	}, errLoad
 }
