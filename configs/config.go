@@ -19,7 +19,7 @@ type Config struct {
 }
 
 func LoadConfig() (*Config, error) {
-	if err := godotenv.Load(".env"); err != nil {
+	if err := godotenv.Load("../.env"); err != nil {
 		return nil, err
 	}
 	dbPort, _ := strconv.Atoi(os.Getenv("DB_PORT"))
