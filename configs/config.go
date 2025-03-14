@@ -19,9 +19,18 @@ type Config struct {
 }
 
 func LoadConfig() (*Config, error) {
-	if err := godotenv.Load("../.env"); err != nil {
-		return nil, err
+	envPaths := []string{".env", "../.env", "../../.env"}
+	var loadErr error
+	for _, path := range envPaths {
+		if err := godotenv.Load(path); err == nil {
+			// Successfully loaded
+			loadErr = nil
+			break
+		} else {
+			loadErr = err
+		}
 	}
+
 	dbPort, _ := strconv.Atoi(os.Getenv("DB_PORT"))
 	return &Config{
 		DBHost:        os.Getenv("DB_HOST"),
@@ -32,5 +41,5 @@ func LoadConfig() (*Config, error) {
 		SecretKey:     os.Getenv("SECRET_KEY"),
 		TokenIssuer:   os.Getenv("TOKEN_ISSUER"),
 		TokenAudience: os.Getenv("TOKEN_AUDIENCE"),
-	}, nil
+	}, loadErr
 }
